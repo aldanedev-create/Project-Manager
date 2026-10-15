@@ -43,6 +43,8 @@ def create_app(database_path=None, admin_path=None, debug=None):
 
     @app.get("/health/course")
     async def health():
+        from models import User
+        await User.all().limit(1)
         return {"data": {"status": "ok"}}
 
     @app.get("/")
