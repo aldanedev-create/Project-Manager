@@ -5,8 +5,10 @@ from types import SimpleNamespace
 from pathlib import Path
 from urllib.parse import urlsplit
 from flaxon.middleware import BodyLimitMiddleware, TrustedHostsMiddleware
+from argon2 import PasswordHasher
 from flaxon import Flaxon, Request
 from flaxon.http import JSONResponse
+from modules.auth.module import auth
 from modules.welcome.module import welcome
 from settings import (
     ROOT,
@@ -33,10 +35,15 @@ def create_app(database_path=None, admin_path=None, debug=None):
             TrustedHostsMiddleware, allowed_hosts=[urlsplit(PUBLIC_ORIGIN).hostname]
         )
     app.public_origin = PUBLIC_ORIGIN
+    app.hasher = PasswordHasher()
+    app.dummy_password_hash = app.hasher.hash("dummy-password-for-timing-only")
     for module, prefix in [
+        (auth, "/api/auth"),
         (welcome, "/api/welcome"),
     ]:
         app.mount_module(module, prefix=prefix)
+
+
     if app.is_management:
         return app
 
