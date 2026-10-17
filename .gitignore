@@ -6,5 +6,6 @@ __pycache__/
 data/
 dist/
 build/
+*cookies.txt
 *.egg-info/
 .pytest_cache/
