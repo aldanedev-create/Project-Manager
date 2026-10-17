@@ -9,6 +9,7 @@ from argon2 import PasswordHasher
 from flaxon import Flaxon, Request
 from flaxon.http import JSONResponse
 from modules.auth.module import auth
+from modules.projects.module import projects
 from modules.welcome.module import welcome
 from settings import (
     ROOT,
@@ -39,6 +40,7 @@ def create_app(database_path=None, admin_path=None, debug=None):
     app.dummy_password_hash = app.hasher.hash("dummy-password-for-timing-only")
     for module, prefix in [
         (auth, "/api/auth"),
+        (projects, "/api/projects"),
         (welcome, "/api/welcome"),
     ]:
         app.mount_module(module, prefix=prefix)
