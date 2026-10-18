@@ -47,9 +47,16 @@ def create_app(database_path=None, admin_path=None, debug=None):
     ]:
         app.mount_module(module, prefix=prefix)
 
+    app.use_teloce(
+        project_root=ROOT,
+        ui_dir="ui",
+        title="Project Manager",
+        options={"minifier": "minifyjs"},
+    )
 
     if app.is_management:
         return app
+
 
 
     @app.get("/health/course")
@@ -59,10 +66,13 @@ def create_app(database_path=None, admin_path=None, debug=None):
         return {"data": {"status": "ok"}}
 
     @app.get("/")
-    async def home():
-        return {"data": {"message": "Backend lesson ready. The SPA starts in chapter 8."}}
+    @app.get("/login")
+    @app.get("/projects")
+    async def spa(request: Request, project_id=None, slug=None):
+        return await request.compile("app.html", {})
 
     return app
+
 
 
 app = create_app()
