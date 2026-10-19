@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    /* Target and Environment */
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    
+    /* Strictness & Safety */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    
+    /* Module Resolution & Interop */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    
+    /* Advanced Options */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "ui/**/*",                      /* Scans everything inside your ui/ folder */
+    "modules/**/*",                 /* Scans your modules folder where the error occurred */
+    "ui/global.d.ts"                /* Explicitly ensures your global file is picked up */
+  ],
+  "exclude": [
+    "node_modules", 
+    "dist", 
+    "build"
+  ]
+}
