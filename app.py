@@ -68,6 +68,7 @@ def create_app(database_path=None, admin_path=None, debug=None):
     @app.get("/")
     @app.get("/login")
     @app.get("/projects")
+    @app.get("/projects/<int:project_id>")
     async def spa(request: Request, project_id=None, slug=None):
         return await request.compile("app.html", {})
 
