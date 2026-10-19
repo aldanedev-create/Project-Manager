@@ -8,6 +8,8 @@ from flaxon.middleware import BodyLimitMiddleware, TrustedHostsMiddleware
 from argon2 import PasswordHasher
 from flaxon import Flaxon, Request
 from flaxon.http import JSONResponse
+from backoffice import configure_backoffice
+from modules.content.module import content
 from modules.auth.module import auth
 from modules.projects.module import projects
 from modules.tasks.module import tasks
@@ -43,6 +45,7 @@ def create_app(database_path=None, admin_path=None, debug=None):
         (auth, "/api/auth"),
         (projects, "/api/projects"),
         (tasks, "/api/tasks"),
+        (content, "/api/content"),
         (welcome, "/api/welcome"),
     ]:
         app.mount_module(module, prefix=prefix)
@@ -57,6 +60,12 @@ def create_app(database_path=None, admin_path=None, debug=None):
     if app.is_management:
         return app
 
+    configure_backoffice(
+        app,
+        admin_path or ADMIN_DATABASE_PATH,
+        Path(admin_path or ADMIN_DATABASE_PATH).parent / "uploads",
+    )
+
 
 
     @app.get("/health/course")
@@ -69,6 +78,8 @@ def create_app(database_path=None, admin_path=None, debug=None):
     @app.get("/login")
     @app.get("/projects")
     @app.get("/projects/<int:project_id>")
+    @app.get("/help")
+    @app.get("/help/<slug>")
     async def spa(request: Request, project_id=None, slug=None):
         return await request.compile("app.html", {})
 

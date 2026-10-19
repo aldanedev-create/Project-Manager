@@ -1,0 +1,78 @@
+<template>
+  <section>
+    <h1>Help centre</h1>
+    <p v-if="loading" role="status">Loading articles…</p>
+    <p v-if="message" role="alert">{{ message }}</p>
+    <p v-if="!loading && articles.length === 0">No published articles yet.</p>
+    <div class="cards">
+      <a
+        v-for="article in articles"
+        :key="article.id"
+        :href="'/help/' + article.slug"
+        data-teloce-link
+        class="card"
+        ><h2>{{ article.title }}</h2>
+        <p>{{ article.summary }}</p></a
+      >
+    </div>
+  </section>
+</template>
+<script lang="ts">
+import { api } from "../../../../ui/api.ts";
+export default {
+  data() {
+    return { articles: [], loading: true, message: "" };
+  },
+  async mounted() {
+    try {
+      this.articles = await api("/api/content/articles");
+    } catch (error) {
+      this.message = error.message;
+    } finally {
+      this.loading = false;
+    }
+  },
+};
+</script>
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+a {
+  color: #1d4ed8;
+}
+h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  line-height: 1.15;
+}
+h2 {
+  font-size: 1.2rem;
+}
+p {
+  line-height: 1.6;
+}
+[role="alert"] {
+  color: #a21c2b;
+  padding: 0.8rem;
+  border-left: 4px solid;
+}
+:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+.card {
+  display: block;
+  background: white;
+  border: 1px solid #d8e0ed;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin: 1rem 0;
+  color: inherit;
+  text-decoration: none;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1rem;
+}
+</style>
